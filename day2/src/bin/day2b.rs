@@ -1,24 +1,37 @@
+use day2::GameHand;
 use global;
-fn main() {
-  let total: i32 = global::read_strings()
-    .iter()
-    .map(|g| value(g).unwrap())
-    .sum();
 
-  println!("{total:?}")
+fn main() {
+  let values = global::read_strings();
+  let total = day2::calculate_total(values, value_calculator);
+
+  println!("{total}")
 }
 
-fn value(game: &str) -> Result<i32, &str> {
-  match game {
-    "A X" => Ok(0 + 3),
-    "A Y" => Ok(3 + 1),
-    "A Z" => Ok(6 + 2),
-    "B X" => Ok(0 + 1),
-    "B Y" => Ok(3 + 2),
-    "B Z" => Ok(6 + 3),
-    "C X" => Ok(0 + 2),
-    "C Y" => Ok(3 + 3),
-    "C Z" => Ok(6 + 1),
-    &_ => Err("Invalid Game"),
+fn value_calculator(game: &str) -> i32 {
+  let (h1, h2) = day2::normalize(game);
+
+  match h2 {
+    GameHand::ROCK => 0 + h1.worse().value(),
+    GameHand::PAPER => 3 + h1.value(),
+    GameHand::SCISSOR => 6 + h1.better().value(),
+  }
+}
+
+#[cfg(test)]
+mod tests {
+  use super::*;
+
+  #[test]
+  fn value_calculator_works() {
+    assert_eq!(3, value_calculator("A X"));
+    assert_eq!(4, value_calculator("A Y"));
+    assert_eq!(8, value_calculator("A Z"));
+    assert_eq!(1, value_calculator("B X"));
+    assert_eq!(5, value_calculator("B Y"));
+    assert_eq!(9, value_calculator("B Z"));
+    assert_eq!(2, value_calculator("C X"));
+    assert_eq!(6, value_calculator("C Y"));
+    assert_eq!(7, value_calculator("C Z"));
   }
 }
