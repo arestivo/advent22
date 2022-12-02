@@ -5,3 +5,9 @@ edition = "2021"
 
 [dependencies]
 global = {path = "../global"}
+
+[[bin]]
+name = "day2a"
+
+[[bin]]
+name = "day2b"
