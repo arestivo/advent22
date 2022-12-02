@@ -1,9 +1,17 @@
 #[derive(PartialEq, Eq)]
 pub enum GameResult { WIN, DRAW, LOSE }
-#[derive(PartialEq, Eq, Clone)]
+#[derive(PartialEq, Eq)]
 pub enum GameHand { ROCK, PAPER, SCISSOR }
 
 impl GameHand {
+  pub fn value(&self) -> i32 {
+    match self {
+      GameHand::ROCK => 1,
+      GameHand::PAPER => 2,
+      GameHand::SCISSOR => 3
+    }
+  }
+
   pub fn worse(&self) -> GameHand {
     match self {
       GameHand::ROCK => GameHand::SCISSOR,
@@ -17,14 +25,6 @@ impl GameHand {
       GameHand::ROCK => GameHand::PAPER,
       GameHand::PAPER => GameHand::SCISSOR,
       GameHand::SCISSOR => GameHand::ROCK
-    }
-  }
-
-  pub fn value(self) -> i32 {
-    match self {
-      GameHand::ROCK => 1,
-      GameHand::PAPER => 2,
-      GameHand::SCISSOR => 3
     }
   }
 }
@@ -46,8 +46,8 @@ pub fn normalize(game: &str) -> (GameHand, GameHand) {
 }
 
 pub fn result(h1: &GameHand, h2: &GameHand) -> GameResult {
-  if h1.better() == h2.clone() { return GameResult::WIN };
-  if h2.better() == h1.clone() { return GameResult::LOSE };
+  if h1.better().value() == h2.value() { return GameResult::WIN };
+  if h2.better().value() == h1.value() { return GameResult::LOSE };
   GameResult::DRAW
 }
 
@@ -60,13 +60,6 @@ mod tests {
     assert_eq!(GameHand::ROCK.value(), 1);
     assert_eq!(GameHand::PAPER.value(), 2);
     assert_eq!(GameHand::SCISSOR.value(), 3);
-  }
-
-  #[test]
-  fn better_works() {
-    assert!(matches!(GameHand::ROCK.better(), GameHand::PAPER));
-    assert!(matches!(GameHand::PAPER.better(), GameHand::SCISSOR));
-    assert!(matches!(GameHand::SCISSOR.better(), GameHand::ROCK));
   }
 
   #[test]
