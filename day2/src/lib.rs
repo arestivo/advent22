@@ -46,9 +46,9 @@ pub fn normalize(game: &str) -> (GameHand, GameHand) {
 }
 
 pub fn result(h1: &GameHand, h2: &GameHand) -> GameResult {
-  if h1.better().value() == h2.value() { return GameResult::WIN };
-  if h2.better().value() == h1.value() { return GameResult::LOSE };
-  GameResult::DRAW
+  if &h1.better() == h2 { GameResult::WIN }
+  else if &h2.better() == h1 { GameResult::LOSE }
+  else { GameResult::DRAW }
 }
 
 #[cfg(test)]

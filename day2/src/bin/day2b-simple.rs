@@ -1,24 +1,25 @@
 use global;
+
 fn main() {
   let total: i32 = global::read_strings()
     .iter()
-    .map(|g| value(g).unwrap())
+    .map(|g| value(g))
     .sum();
 
   println!("{total:?}")
 }
 
-fn value(game: &str) -> Result<i32, &str> {
+fn value(game: &str) -> i32 {
   match game {
-    "A X" => Ok(0 + 3),
-    "A Y" => Ok(3 + 1),
-    "A Z" => Ok(6 + 2),
-    "B X" => Ok(0 + 1),
-    "B Y" => Ok(3 + 2),
-    "B Z" => Ok(6 + 3),
-    "C X" => Ok(0 + 2),
-    "C Y" => Ok(3 + 3),
-    "C Z" => Ok(6 + 1),
-    &_ => Err("Invalid Game"),
+    "A X" => 0 + 3,
+    "A Y" => 3 + 1,
+    "A Z" => 6 + 2,
+    "B X" => 0 + 1,
+    "B Y" => 3 + 2,
+    "B Z" => 6 + 3,
+    "C X" => 0 + 2,
+    "C Y" => 3 + 3,
+    "C Z" => 6 + 1,
+    &_ => unreachable!(),
   }
 }
