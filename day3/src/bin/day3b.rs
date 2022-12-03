@@ -22,7 +22,7 @@ mod tests {
   use super::*;
 
   #[test]
-  fn value_calculator_works() {
+  fn common_works() {
     assert_eq!('r', common(&[
       String::from("vJrwpWtwJgWrhcsFMMfFFhFp"), 
       String::from("jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL"), 

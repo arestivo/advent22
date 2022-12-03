@@ -16,7 +16,7 @@ mod tests {
   use super::*;
 
   #[test]
-  fn value_calculator_works() {
+  fn common_works() {
     assert_eq!('p', common(&String::from("vJrwpWtwJgWrhcsFMMfFFhFp")));
     assert_eq!('L', common(&String::from("jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL")));
     assert_eq!('P', common(&String::from("PmmdzqPrVvPwwTWBwg")));
