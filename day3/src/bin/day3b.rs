@@ -1,15 +1,13 @@
 use day3::priority;
 
 fn main() {
-  let lines = global::read_strings();
-
-  let x: Vec<u32> = lines
+  let total: u32 = global::read_strings()
     .chunks(3)
     .map(|g| common(g))
     .map(|c| priority(c))
-    .collect();
+    .sum();
 
-  println!("{}", x.iter().sum::<u32>());
+  println!("{}", total);
 }
 
 fn common(r: &[String]) -> char {

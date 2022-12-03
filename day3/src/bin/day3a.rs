@@ -1,6 +1,8 @@
 fn main() {
-  let lines = global::read_strings();
-  let total = lines.iter().fold(0, |acc, r| acc + day3::priority(common(r)));
+  let total = global::read_strings()
+    .iter()
+    .fold(0, |acc, r| acc + day3::priority(common(r)));
+
   println!("{total}")
 }
 
