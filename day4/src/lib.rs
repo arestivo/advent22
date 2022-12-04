@@ -2,14 +2,8 @@ use global::to_u32;
 
 pub type Assignment = ((u32, u32), (u32, u32));
 
-pub fn split(s: &str, d: char) -> (&str, &str) {
+fn split(s: &str, d: char) -> (&str, &str) {
   s.split_once(d).unwrap()
-}
-
-pub fn filter_assignements(lines: Vec<String>, filter: fn(&Assignment) -> bool) -> Vec<Assignment>{
- parse_assignments(lines)
-  .into_iter()
-  .filter(|v| filter(v)).to_owned().collect()
 }
 
 fn parse_assignments(lines: Vec<String>) -> Vec<Assignment> {
@@ -18,6 +12,12 @@ fn parse_assignments(lines: Vec<String>) -> Vec<Assignment> {
     .map(|p| (split(p.0, '-'), split(p.1, '-')))
     .map(|p| ((to_u32(p.0.0), to_u32(p.0.1)),(to_u32(p.1.0), to_u32(p.1.1))))
     .collect()
+}
+
+pub fn filter_assignements(lines: Vec<String>, filter: fn(&Assignment) -> bool) -> Vec<Assignment>{
+  parse_assignments(lines)
+    .into_iter()
+    .filter(|v| filter(v)).to_owned().collect()
 }
 
 #[cfg(test)]
