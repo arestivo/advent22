@@ -1,20 +1,20 @@
-use global;
+use global::to_u32;
 
 fn main() {
   let max = calculate_max(&global::read_strings());
   println!("{}", max);
 }
 
-fn calculate_max(lines: &Vec<String>) -> i32 {
-  let mut elfs: Vec<i32> = lines
+fn calculate_max(lines: &Vec<String>) -> u32 {
+  let mut elfs: Vec<u32> = lines
     .split(|l| l == "")
-    .map(|e| e.iter().map(|s| s.parse::<i32>().unwrap()))
-    .map(|v| v.sum::<i32>())
+    .map(|e| e.iter().map(|s| to_u32(s)))
+    .map(|v| v.sum::<u32>())
     .collect();
 
   elfs.sort();
 
-  elfs.iter().rev().take(3).sum::<i32>()
+  elfs.iter().rev().take(3).sum::<u32>()
 }
 
 #[cfg(test)]
