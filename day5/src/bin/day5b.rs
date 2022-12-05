@@ -17,7 +17,6 @@ fn execute_moves(ship: &mut Ship, mover: &mut CrateMover9001, moves: &Vec<Move>)
   moves.iter().for_each(|m| mover.execute(m, ship));
 }
 
-
 #[cfg(test)]
 mod tests {
   use super::*;
