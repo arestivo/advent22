@@ -1,12 +1,11 @@
-use std::collections::{VecDeque, HashSet};
+use std::collections::HashSet;
 
 pub fn find_marker(packet: String, size: usize) -> usize {
-  let mut previous: VecDeque<char> = VecDeque::from([]);
+  let mut previous = vec![' '; size];
 
-  for i in 0..packet.len() {
-    previous.push_back(packet.chars().nth(i).unwrap());
-    if previous.len() > size { previous.pop_front(); }
-    if previous.len() == size && HashSet::<char>::from_iter(previous.iter().cloned()).len() == size { 
+  for (i, c) in packet.chars().enumerate() {
+    previous[i % size] = c;
+    if previous[size - 1] != ' ' && HashSet::<char>::from_iter(previous.clone()).len() == size { 
       return i + 1; 
     }
   }
