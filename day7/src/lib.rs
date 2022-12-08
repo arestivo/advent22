@@ -27,8 +27,11 @@ pub fn read_folders(lines: &Vec<String>) -> HashMap<String, u64> {
     }
 
     if file_entry.is_match(line) {
-      let result = file_entry.captures_iter(line).next().unwrap();
-      let size = result.get(1).unwrap().as_str().parse::<u64>().unwrap();
+      let size = file_entry
+        .captures_iter(line)
+        .next().unwrap()
+        .get(1).unwrap()
+        .as_str().parse::<u64>().unwrap();
       folders.iter_mut().for_each(|p| if current.starts_with(p.0) { *p.1 = *p.1 + size });
     }
   }
