@@ -15,7 +15,7 @@ fn main() {
   println!("{}", best);
 }
 
-fn scenic_score(trees: &Vec<Vec<u32>>, row: usize, column: usize) -> u32 {
+fn scenic_score(trees: &Vec<Vec<Option<u32>>>, row: usize, column: usize) -> u32 {
   let mut score = 1;
 
   let mut count = 0;

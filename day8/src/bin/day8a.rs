@@ -7,7 +7,7 @@ fn main() {
   println!("{}", visible.iter().map(|r| r.iter().sum::<u32>()).sum::<u32>());
 }
 
-fn visibility(trees: &Vec<Vec<u32>>) -> Vec<Vec<u32>> {
+fn visibility(trees: &Vec<Vec<Option<u32>>>) -> Vec<Vec<u32>> {
   let height = trees.len();
   let width = trees[0].len();
 
@@ -22,7 +22,7 @@ fn visibility(trees: &Vec<Vec<u32>>) -> Vec<Vec<u32>> {
   visible
 }
 
-fn is_visible(trees: &Vec<Vec<u32>>, row: usize, column: usize) -> u32 {
+fn is_visible(trees: &Vec<Vec<Option<u32>>>, row: usize, column: usize) -> u32 {
   let mut count = 4;
 
   for r in 0..row { if trees[r][column] >= trees[row][column] { count -= 1; break; }}
@@ -42,6 +42,7 @@ mod tests {
     let lines = vec!["30373".to_string(), "25512".to_string(), "65332".to_string(), "33549".to_string(), "35390".to_string()];
     let trees = day8::lines_to_array(lines);
     let visible = visibility(&trees);
+
 
     assert_eq!(visible, vec![vec![1, 1, 1, 1, 1], vec![1, 1, 1, 0, 1], vec![1, 1, 0, 1, 1], vec![1, 0, 1, 0, 1], vec![1, 1, 1, 1, 1]]);
   }
