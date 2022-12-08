@@ -64,6 +64,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "day8"
+version = "0.1.0"
+dependencies = [
+ "global",
+ "regex",
+]
+
+[[package]]
 name = "global"
 version = "0.1.0"
 
