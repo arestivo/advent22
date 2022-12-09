@@ -1,0 +1,79 @@
+#[derive(Debug, Clone)]
+pub enum Direction {
+  Up,
+  Down,
+  Left,
+  Right
+}
+
+#[derive(Debug, Clone)]
+pub struct Move {
+  pub dir: Direction,
+  pub num: u32
+}
+
+#[derive(Debug,Hash,Eq,PartialEq,Clone,Copy)]
+pub struct Point {
+  pub row: i32,
+  pub col: i32
+}
+
+pub fn get_moves(lines: &Vec<String>) -> Vec<Move> {
+  let mut moves = vec![];
+
+  let re = regex::Regex::new(r"^([UDLR]) (\d+)$").unwrap();
+
+  for line in lines {
+    let cm = re.captures_iter(line).next().unwrap();
+    let (ch, num) = (cm[1].to_string(), cm[2].to_string().parse().unwrap());
+    let m = match ch.as_str() {
+      "U" => Move { dir: Direction::Up, num },
+      "D" => Move { dir: Direction::Down, num },
+      "L" => Move { dir: Direction::Left, num },
+      "R" => Move { dir: Direction::Right, num },
+      &_ => unreachable!()
+    };
+    moves.push(m);
+  }
+
+  moves
+}
+
+impl Point {
+  pub fn origin() -> Point {
+    Point { row: 0, col: 0 }
+  }
+
+  pub fn apply_move(&mut self, m: &Move){
+    match m.dir {
+      Direction::Up => { self.row = self.row - 1 },
+      Direction::Down => { self.row = self.row + 1 },
+      Direction::Left => { self.col = self.col - 1 },
+      Direction::Right => { self.col = self.col + 1 },
+    };  
+  }
+
+  fn direction(p1: &Point, p2: &Point) -> (Option<Move>, Option<Move>) {
+    let mut m1 = None;
+    let mut m2 = None;
+
+    if p1.row - p2.row > 1 { m1 = Some(Move{dir: Direction::Up, num: 1}) }
+    else if p1.row - p2.row < -1 { m1 = Some(Move{dir: Direction::Down, num: 1}) }
+    else if p1.row - p2.row == 1 && (p1.col - p2.col).abs() > 1 { m1 = Some(Move{dir: Direction::Up, num: 1}) }
+    else if p1.row - p2.row == -1 && (p1.col - p2.col).abs() > 1 { m1 = Some(Move{dir: Direction::Down, num: 1}) }
+
+    if p1.col - p2.col > 1 { m2 = Some(Move{dir: Direction::Left, num: 1}) }
+    else if p1.col - p2.col < -1 { m2 = Some(Move{dir: Direction::Right, num: 1}) }
+    else if p1.col - p2.col == 1 && (p1.row - p2.row).abs() > 1 { m2 = Some(Move{dir: Direction::Left, num: 1}) }
+    else if p1.col - p2.col == -1 && (p1.row - p2.row).abs() > 1 { m2 = Some(Move{dir: Direction::Right, num: 1}) }
+    
+    (m1, m2)
+  }
+
+  pub fn follow(&mut self, other: &Point) {
+    let (m1, m2) = Point::direction(self, other);
+
+    if m1.is_some() { self.apply_move(&m1.unwrap()); }
+    if m2.is_some() { self.apply_move(&m2.unwrap()); }
+  }
+}
