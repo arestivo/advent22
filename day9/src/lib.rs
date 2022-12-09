@@ -1,4 +1,4 @@
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum Direction {
   Up,
   Down,
@@ -6,13 +6,13 @@ pub enum Direction {
   Right
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Move {
   pub dir: Direction,
   pub num: u32
 }
 
-#[derive(Debug,Hash,Eq,PartialEq,Clone,Copy)]
+#[derive(Debug, Hash, Eq, PartialEq, Clone, Copy)]
 pub struct Point {
   pub row: i32,
   pub col: i32
@@ -75,5 +75,63 @@ impl Point {
 
     if m1.is_some() { self.apply_move(&m1.unwrap()); }
     if m2.is_some() { self.apply_move(&m2.unwrap()); }
+  }
+}
+
+
+#[cfg(test)]
+mod tests {
+  use super::*;
+
+  #[test]
+  fn apply_move_works() {
+    let mut p = Point{row: 0, col: 0};
+    p.apply_move(&(Move {dir: Direction::Up, num: 1}));
+    assert_eq!(Point{row: -1, col: 0}, p);
+
+    let mut p = Point{row: 0, col: 0};
+    p.apply_move(&(Move {dir: Direction::Down, num: 1}));
+    assert_eq!(Point{row: 1, col: 0}, p);
+
+    let mut p = Point{row: 0, col: 0};
+    p.apply_move(&(Move {dir: Direction::Left, num: 1}));
+    assert_eq!(Point{row: 0, col: -1}, p);
+
+    let mut p = Point{row: 0, col: 0};
+    p.apply_move(&(Move {dir: Direction::Right, num: 1}));
+    assert_eq!(Point{row: 0, col: 1}, p);
+  }
+
+  #[test]
+  fn direction_works() {
+    let p1 = Point {row: 0, col: 0};
+
+    let p2 = Point {row: 1, col: 0};
+    assert_eq!((None, None), Point::direction(&p1, &p2));
+
+    let p2 = Point {row: 2, col: 0};
+    assert_eq!((Some(Move {dir: Direction::Down, num: 1}), None), Point::direction(&p1, &p2));
+
+    let p2 = Point {row: -2, col: 0};
+    assert_eq!((Some(Move {dir: Direction::Up, num: 1}), None), Point::direction(&p1, &p2));
+
+    let p2 = Point {row: 0, col: 2};
+    assert_eq!((None, Some(Move {dir: Direction::Right, num: 1})), Point::direction(&p1, &p2));
+
+    let p2 = Point {row: 0, col: -2};
+    assert_eq!((None, Some(Move {dir: Direction::Left, num: 1})), Point::direction(&p1, &p2));
+
+    let p2 = Point {row: 2, col: 1};
+    assert_eq!((Some(Move {dir: Direction::Down, num: 1}), Some(Move {dir: Direction::Right, num: 1})), Point::direction(&p1, &p2));
+  }
+
+  #[test]
+  fn follow_works() {
+    let mut p1 = Point {row: 0, col: 0};
+    let p2 = Point {row: 2, col: 1};
+
+    p1.follow(&p2);
+
+    assert_eq!(Point {row: 1, col: 1}, p1);
   }
 }
