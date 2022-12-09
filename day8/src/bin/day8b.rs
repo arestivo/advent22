@@ -2,7 +2,7 @@ use std::cmp::max;
 
 fn main() {
   let lines = global::read_strings();
-  let trees = day8::lines_to_array(lines);
+  let trees = global::lines_to_array(lines);
 
   let mut best = 0;
 
@@ -15,7 +15,7 @@ fn main() {
   println!("{}", best);
 }
 
-fn scenic_score(trees: &Vec<Vec<Option<u32>>>, row: usize, column: usize) -> u32 {
+fn scenic_score(trees: &Vec<Vec<u32>>, row: usize, column: usize) -> u32 {
   let mut score = 1;
 
   let mut count = 0;
@@ -44,7 +44,7 @@ mod tests {
   #[test]
   fn scenic_score_works() {
     let lines = vec!["30373".to_string(), "25512".to_string(), "65332".to_string(), "33549".to_string(), "35390".to_string()];
-    let trees = day8::lines_to_array(lines);
+    let trees = global::lines_to_array(lines);
 
     let mut scores = vec![vec![0; trees[0].len()]; trees.len()];
 

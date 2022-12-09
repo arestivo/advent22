@@ -8,6 +8,20 @@ pub fn read_single_line() -> String {
   io::stdin().lock().lines().next().unwrap().unwrap()
 }
 
+pub fn lines_to_array(lines: Vec<String>) -> Vec<Vec<u32>> {
+  let mut trees = vec![];
+
+  for line in lines {
+    let mut row = vec![];
+    for c in line.chars() {
+      row.push(c.to_digit(10).unwrap());
+    }
+    trees.push(row);
+  }
+
+  trees
+}
+
 pub fn to_u32(s: &str) -> u32 {
   s.parse::<u32>().unwrap()
 }
