@@ -29,5 +29,4 @@ fn main() {
   let i2 = monkeys[1].inspections.clone();
 
   println!("{:?}", i1 * i2);
-
 }
