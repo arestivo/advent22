@@ -36,7 +36,7 @@ impl Monkey {
     let c = re.captures_iter(&lines[2]).next().unwrap();
     let operation = (
       if c[1].to_string() == "old" { Value::Old } else { Value::Number(c[1].to_string().parse().unwrap()) },
-      if c[2].to_string() == "+" { Op::Plus } else { Op::Times },
+      match c[2].to_string().as_str() { "+" => { Op::Plus } "*" => { Op::Times } &_ => panic!("Unknown operator")},
       if c[3].to_string() == "old" { Value::Old } else { Value::Number(c[3].to_string().parse().unwrap()) }
     );
 
