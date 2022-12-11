@@ -1,4 +1,5 @@
-use std::{io, io::prelude::*};
+use std::{io, io::prelude::*, str::FromStr};
+use regex::Regex;
 
 pub fn read_strings() -> Vec<String> {
   io::stdin().lock().lines().map(|x| x.unwrap()).collect()
@@ -20,6 +21,15 @@ pub fn lines_to_array(lines: Vec<String>) -> Vec<Vec<u32>> {
   }
 
   trees
+}
+
+pub fn extract_number_from_string<T: FromStr>(s: &String) -> T {
+  let re = Regex::new(r"(\d+)").unwrap();
+  let c = re.captures_iter(&s).next().unwrap();
+  match c[1].to_string().parse::<T>() {
+    Ok(v) => v,
+    Err(_) => panic!("Failed to parse number from {}", s)
+  }
 }
 
 pub fn to_u32(s: &str) -> u32 {
