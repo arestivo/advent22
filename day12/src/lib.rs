@@ -60,3 +60,29 @@ pub fn fastest_path(heights: &Vec<Vec<u32>>, start: &Position, end: &Position) -
 
   u32::MAX 
 }
+
+#[cfg(test)]
+mod tests {
+  use super::*;
+
+  #[test]
+  fn lines_to_heights_works() {
+    assert_eq!((
+      vec![vec![0, 1, 2],vec![3, 4, 5],vec![6, 7, 25]], 
+      Position {r: 0, c: 0}, Position {r: 2, c: 2}), 
+      lines_to_heights(vec!["Sbc".to_string(),"def".to_string(),"ghE".to_string()])
+    );
+  }
+
+  #[test]
+  fn fastest_path_works() {
+    let (heights, start, end) = lines_to_heights(
+      vec!["Sbcde".to_string(),"jihgf".to_string(),"klmno".to_string(),"tsrqp".to_string(),"uvwxy".to_string(),"Ezzzz".to_string()]);
+    assert_eq!(29, fastest_path(&heights, &start, &end));
+
+    let (heights, start, end) = lines_to_heights(
+      vec!["Sbcde".to_string(),"Eihgf".to_string(),"yjklm".to_string(),"zqpon".to_string(),"yrstu".to_string(),"zyxwv".to_string()]);
+    assert_eq!(29, fastest_path(&heights, &start, &end));
+  }
+
+}
