@@ -25,30 +25,22 @@ pub fn compare(l1: &List, l2: &List) -> cmp::Ordering {
   let length = cmp::min(l1.len(), l2.len());
 
   for i in 0..length {
-    match &l1[i] {
-      Element::Number(n1) => {
-        match &l2[i] {
-          Element::Number(n2)  => {
-            if n1 < &n2 { return Ordering::Less }
-            if n1 > &n2 { return Ordering::Greater }
-          }
-          Element::List (l2) => { 
-            let r = compare(&vec![Element::Number(*n1)], &l2);
-            if r != Ordering::Equal { return r }
-          }
-        }
+    match (&l1[i], &l2[i]) {
+      (Element::Number(n1), Element::Number(n2)) => {
+        if n1 < &n2 { return Ordering::Less }
+        if n1 > &n2 { return Ordering::Greater }
       }
-      Element::List(l1) => {
-        match &l2[i] {
-          Element::Number(n2)  => { 
-            let r = compare(&l1, &vec![Element::Number(*n2)]);
-            if r != Ordering::Equal { return r }
-          }
-          Element::List (l2) => { 
-            let r = compare(&l1, &l2);
-            if r != Ordering::Equal { return r }
-          }
-        }
+      (Element::Number(n1), Element::List(l2)) => {
+        let r = compare(&vec![Element::Number(*n1)], &l2);
+        if r != Ordering::Equal { return r }
+      }
+      (Element::List(l1), Element::Number(n2)) => {
+        let r = compare(&l1, &vec![Element::Number(*n2)]);
+        if r != Ordering::Equal { return r }
+      }
+      (Element::List(l1),Element::List (l2)) => { 
+        let r = compare(&l1, &l2);
+        if r != Ordering::Equal { return r }
       }
     }
   }
