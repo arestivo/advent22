@@ -1,10 +1,10 @@
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub enum OpCode {
   Noop,
   AddX { value: i64 }
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub struct  Instruction {
   cycles: usize,
   opcode: OpCode
@@ -70,4 +70,55 @@ impl CPU {
     }
     self.cycles -= 1;
   }
+}
+
+#[cfg(test)]
+mod tests {
+  use super::*;
+
+  #[test]
+  fn lines_to_code_works() {
+    let cpu = lines_to_code(&vec!["addx 10".to_string(), "addx -1".to_string(), "noop".to_string()]);
+
+    assert_eq!(0, cpu.pc);
+    assert_eq!(vec![
+      Instruction{cycles: 2, opcode: OpCode::AddX{value: 10}},
+      Instruction{cycles: 2, opcode: OpCode::AddX{value: -1}},
+      Instruction{cycles: 1, opcode: OpCode::Noop}
+    ], cpu.code);
+    assert_eq!(1, cpu.registers.x);
+    assert_eq!(2, cpu.cycles);
+  }
+
+  #[test]
+  fn cycle_works() {
+    let mut cpu = lines_to_code(&vec!["addx 10".to_string(), "addx -1".to_string(), "noop".to_string()]);
+
+    cpu.cycle();
+    assert_eq!(1, cpu.registers.x);
+    assert_eq!(1, cpu.cycles);
+    assert!(!cpu.finished());
+
+    cpu.cycle();
+    assert_eq!(11, cpu.registers.x);
+    assert_eq!(2, cpu.cycles);
+    assert!(!cpu.finished());
+
+    cpu.cycle();
+    assert_eq!(11, cpu.registers.x);
+    assert_eq!(1, cpu.cycles);
+    assert!(!cpu.finished());
+
+    cpu.cycle();
+    assert_eq!(10, cpu.registers.x);
+    assert_eq!(1, cpu.cycles);
+    assert!(!cpu.finished());
+
+    cpu.cycle();
+    assert_eq!(10, cpu.registers.x);
+    assert_eq!(0, cpu.cycles);
+    assert!(cpu.finished());
+
+  }
+
 }
