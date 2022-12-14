@@ -1,4 +1,4 @@
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Direction {
   Up,
   Down,
@@ -6,7 +6,7 @@ pub enum Direction {
   Right
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Move {
   pub dir: Direction,
   pub num: u32
@@ -46,10 +46,10 @@ impl Point {
 
   pub fn apply_move(&mut self, m: &Move){
     match m.dir {
-      Direction::Up => { self.row = self.row - 1 },
-      Direction::Down => { self.row = self.row + 1 },
-      Direction::Left => { self.col = self.col - 1 },
-      Direction::Right => { self.col = self.col + 1 },
+      Direction::Up => { self.row -= 1 },
+      Direction::Down => { self.row += 1 },
+      Direction::Left => { self.col -= 1 },
+      Direction::Right => { self.col += 1 },
     };  
   }
 
@@ -73,8 +73,8 @@ impl Point {
   pub fn follow(&mut self, other: &Point) {
     let (m1, m2) = Point::direction(self, other);
 
-    if m1.is_some() { self.apply_move(&m1.unwrap()); }
-    if m2.is_some() { self.apply_move(&m2.unwrap()); }
+    if let Some(m1) = m1 { self.apply_move(&m1); }
+    if let Some(m2) = m2 { self.apply_move(&m2); }
   }
 }
 

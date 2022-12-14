@@ -1,5 +1,4 @@
 use day2::GameHand;
-use global;
 
 fn main() {
   let total = day2::calculate_total(global::read_strings(), value_calculator);

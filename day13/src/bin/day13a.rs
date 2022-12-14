@@ -4,7 +4,7 @@ use day13::{make, compare};
 
 fn main() {
   let lines = global::read_strings();
-  let pairs:Vec<(String, String)> = lines.split(|l| l == "").map(|c| (c[0].to_owned(), c[1].to_owned())).collect();
+  let pairs:Vec<(String, String)> = lines.split(|l| l.is_empty()).map(|c| (c[0].to_owned(), c[1].to_owned())).collect();
 
   let mut index = 1;
   let mut sum = 0;

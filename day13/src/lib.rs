@@ -27,19 +27,19 @@ pub fn compare(l1: &List, l2: &List) -> cmp::Ordering {
   for i in 0..length {
     match (&l1[i], &l2[i]) {
       (Element::Number(n1), Element::Number(n2)) => {
-        if n1 < &n2 { return Ordering::Less }
-        if n1 > &n2 { return Ordering::Greater }
+        if n1 < n2 { return Ordering::Less }
+        if n1 > n2 { return Ordering::Greater }
       }
       (Element::Number(n1), Element::List(l2)) => {
-        let r = compare(&vec![Element::Number(*n1)], &l2);
+        let r = compare(&vec![Element::Number(*n1)], l2);
         if r != Ordering::Equal { return r }
       }
       (Element::List(l1), Element::Number(n2)) => {
-        let r = compare(&l1, &vec![Element::Number(*n2)]);
+        let r = compare(l1, &vec![Element::Number(*n2)]);
         if r != Ordering::Equal { return r }
       }
       (Element::List(l1),Element::List (l2)) => { 
-        let r = compare(&l1, &l2);
+        let r = compare(l1, l2);
         if r != Ordering::Equal { return r }
       }
     }
@@ -70,7 +70,7 @@ fn parse(tokens: &mut Vec<Token>) -> List {
     tokens.pop();
   }
 
-  panic!("Bad Stack")
+  unreachable!("Bad Stack")
 }
 
 fn tokenize(s: &String) -> Vec<Token> {
@@ -80,7 +80,7 @@ fn tokenize(s: &String) -> Vec<Token> {
   for i in 0..s.len() {
     let c = s.chars().nth(i).unwrap();
 
-    if digits != "" && !c.is_ascii_digit() {
+    if !digits.is_empty() && !c.is_ascii_digit() {
       stack.push(Token::Number(digits.parse().unwrap()));
       digits = "".to_string();
     }
@@ -90,7 +90,7 @@ fn tokenize(s: &String) -> Vec<Token> {
       ']' => { stack.push(Token::Close) },
       ',' => { stack.push(Token::Comma) },
       n if n.is_ascii_digit() => { digits.push(n) },
-      _ => panic!("Failed parsing")
+      _ => unreachable!("Failed parsing")
     }
   }
 

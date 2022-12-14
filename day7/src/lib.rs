@@ -7,14 +7,14 @@ pub fn read_folders(lines: &Vec<String>) -> HashMap<String, u64> {
   let mut folders = HashMap::new();
   let mut current = "".to_string();
 
-  folders.insert("".to_string(), 0 as u64);
+  folders.insert("".to_string(), 0_u64);
 
   let cd_folder = Regex::new(r"^\$ cd ([a-z]+)$").unwrap();
   let cd_back = Regex::new(r"^\$ cd \.\.$").unwrap();
   let file_entry = Regex::new(r"^(\d+) [a-z.]+$").unwrap();
 
   for line in lines {
-    if cd_folder.is_match(&line) {
+    if cd_folder.is_match(line) {
       let name = cd_folder.captures_iter(line).next().unwrap().get(1).unwrap().as_str();
 
       current = format!("{}/{}", &current, name);
@@ -32,7 +32,7 @@ pub fn read_folders(lines: &Vec<String>) -> HashMap<String, u64> {
         .next().unwrap()
         .get(1).unwrap()
         .as_str().parse::<u64>().unwrap();
-      folders.iter_mut().for_each(|p| if current.starts_with(p.0) { *p.1 = *p.1 + size });
+      folders.iter_mut().for_each(|p| if current.starts_with(p.0) { *p.1 += size });
     }
   }
 

@@ -11,7 +11,7 @@ fn main() {
       let monkey = monkeys[m].clone();
   
       for item in monkeys[m].items.clone() {
-        let new_value = Monkey::execute_operation(monkey.operation.clone(), item.clone()) % modulus;
+        let new_value = Monkey::execute_operation(monkey.operation.clone(), item) % modulus;
 
         if new_value % monkey.divisible == 0 { monkeys[monkey.iftrue].items.push(new_value) } 
         else { monkeys[monkey.iffalse].items.push(new_value) }
@@ -26,8 +26,8 @@ fn main() {
   monkeys.sort_by(|m1,m2| m1.inspections.cmp(&m2.inspections));
   monkeys.reverse();
 
-  let i1 = monkeys[0].inspections.clone();
-  let i2 = monkeys[1].inspections.clone();
+  let i1 = monkeys[0].inspections;
+  let i2 = monkeys[1].inspections;
 
   println!("{:?}", i1 * i2);
 }

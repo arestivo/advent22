@@ -1,5 +1,3 @@
-use global;
-
 fn main() {
   let total: i32 = global::read_strings()
     .iter()

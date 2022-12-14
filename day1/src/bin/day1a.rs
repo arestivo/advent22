@@ -7,9 +7,9 @@ fn main() {
 }
 
 
-fn calculate_max(lines: &Vec<String>) -> u32 {
+fn calculate_max(lines: &[String]) -> u32 {
   lines
-    .split(|l| l == "")
+    .split(|l| l.is_empty())
     .map(|e| e.iter().map(|s| to_u32(s)))
     .map(|v| v.sum::<u32>())
     .max().unwrap()

@@ -16,7 +16,7 @@ fn main() {
       for i in 1..=9 {
         rope[i].follow(&rope[i-1].clone());
       }
-      visited.insert(rope[9].clone());
+      visited.insert(rope[9]);
     }
   }
 

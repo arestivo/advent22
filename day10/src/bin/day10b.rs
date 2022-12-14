@@ -10,6 +10,6 @@ fn main() {
       else { print!(" "); }
       cpu.cycle();
     }
-    println!("")
+    println!()
   }
 }

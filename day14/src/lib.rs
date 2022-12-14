@@ -33,20 +33,17 @@ impl Cave {
     Cave { walls: HashSet::new(), sand: HashSet::new() }
   }
 
-  pub fn add_path(&mut self, path: &String) {
+  pub fn add_path(&mut self, path: &str) {
     let re = Regex::new(r"(\d+),(\d+)").unwrap();
     let mut last: Option<Position> = None;
 
     for point in re.captures_iter(path) {
       let p = Position { r: point[2].parse().unwrap(), c: point[1].parse().unwrap() };
 
-      match last {
-        Some(l) => {
-          if l.r == p.r { for c in min(l.c,p.c)..=max(l.c,p.c) { self.walls.insert(Position {r: l.r, c}); } }
-          if l.c == p.c { for r in min(l.r,p.r)..=max(l.r,p.r) { self.walls.insert(Position {r, c: l.c}); } }
+      if let Some(l) = last {
+        if l.r == p.r { for c in min(l.c,p.c)..=max(l.c,p.c) { self.walls.insert(Position {r: l.r, c}); } }
+        if l.c == p.c { for r in min(l.r,p.r)..=max(l.r,p.r) { self.walls.insert(Position {r, c: l.c}); } }
         }
-        None => {}
-      }
 
       last = Some(p);
     }
@@ -86,4 +83,10 @@ impl Cave {
 
     position.r != 0
   }
+}
+
+impl Default for Cave {
+    fn default() -> Self {
+        Self::new()
+    }
 }

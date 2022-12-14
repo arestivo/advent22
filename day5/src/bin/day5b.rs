@@ -13,7 +13,7 @@ fn main() {
   println!("{}", ship);
 }
 
-fn execute_moves(ship: &mut Ship, mover: &mut CrateMover9001, moves: &Vec<Move>) {
+fn execute_moves(ship: &mut Ship, mover: &mut CrateMover9001, moves: &[Move]) {
   moves.iter().for_each(|m| mover.execute(m, ship));
 }
 

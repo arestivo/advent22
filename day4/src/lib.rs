@@ -17,7 +17,7 @@ fn parse_assignments(lines: Vec<String>) -> Vec<Assignment> {
 pub fn filter_assignements(lines: Vec<String>, filter: fn(&Assignment) -> bool) -> Vec<Assignment>{
   parse_assignments(lines)
     .into_iter()
-    .filter(|v| filter(v)).to_owned().collect()
+    .filter(filter).to_owned().collect()
 }
 
 #[cfg(test)]

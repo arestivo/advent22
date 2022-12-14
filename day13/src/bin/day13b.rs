@@ -11,13 +11,13 @@ fn main() {
   lists.push(dk1.to_vec());
   lists.push(dk2.to_vec());
 
-  lists.sort_by(|l1,l2| compare(l1, l2));
+  lists.sort_by(compare);
 
   let mut result = 1;
 
-  for i in 0..lists.len() {
-    if lists[i] == dk1 { result = result * (i + 1) }
-    if lists[i] == dk2 { result = result * (i + 1) }
+  for (i, list) in lists.iter().enumerate() {
+    if list == &dk1 { result *= i + 1 }
+    if list == &dk2 { result *= i + 1 }
   }
 
   println!("{:?}", result);

@@ -15,7 +15,7 @@ fn main() {
     for _ in 0..m.num {
       head.apply_move(&m);
       tail.follow(&head);
-      visited.insert(tail.clone());
+      visited.insert(tail);
     }
   }
 

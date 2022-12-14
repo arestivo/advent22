@@ -16,10 +16,10 @@ pub fn lines_to_heights(lines: Vec<String>) -> (Vec<Vec<u32>>, Position, Positio
   let mut start = Position {r: 0, c: 0};
   let mut end = Position {r: 0, c: 0};
 
-  for r in 0..lines.len() {
+  for (r, line) in lines.iter().enumerate() {
     let mut row = vec![];
-    for c in 0..lines[r].len() {
-      match lines[r].chars().nth(c).unwrap() {
+    for c in 0..line.len() {
+      match line.chars().nth(c).unwrap() {
         'S' => { row.push(0); start = Position { r, c } }
         'E' => { row.push(25);  end = Position { r, c } }
         l => { row.push(l as u32 - 'a' as u32) }
@@ -44,7 +44,7 @@ pub fn fastest_path(heights: &Vec<Vec<u32>>, start: &Position, end: &Position) -
 
     if &current.pos == end { return current.moves }
 
-    for (dr, dc) in [(0, 1), (0, -1 as i32), (1, 0), (-1 as i32, 0)] {
+    for (dr, dc) in [(0, 1), (0, -1_i32), (1, 0), (-1_i32, 0)] {
       if current.pos.r as i32 + dr < 0 || current.pos.c as i32 + dc < 0 { continue }
 
       let next = State { pos: Position { r: (current.pos.r as i32 + dr) as usize, c: (current.pos.c as i32 + dc) as usize }, moves: current.moves + 1 };

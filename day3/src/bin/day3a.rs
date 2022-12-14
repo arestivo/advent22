@@ -8,7 +8,7 @@ fn main() {
 
 fn common(rucksack: &String) -> char {
   let (c1, c2) = rucksack.split_at(rucksack.len() / 2);
-  c1.chars().filter(|i| c2.contains(*i)).nth(0).unwrap()
+  c1.chars().find(|i| c2.contains(*i)).unwrap()
 }
 
 #[cfg(test)]

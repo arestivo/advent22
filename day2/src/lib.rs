@@ -37,7 +37,7 @@ pub fn calculate_total(values: Vec<String>, value_calculator: fn(&str) -> i32) -
 }
 
 pub fn normalize(game: &str) -> (GameHand, GameHand) {
-  let (p1, p2) = game.split_once(" ").unwrap();
+  let (p1, p2) = game.split_once(' ').unwrap();
 
   let p1 = match p1 { "A" => GameHand::ROCK, "B" => GameHand::PAPER, "C" => GameHand::SCISSOR, &_ => unreachable!() };
   let p2 = match p2 { "X" => GameHand::ROCK, "Y" => GameHand::PAPER, "Z" => GameHand::SCISSOR, &_ => unreachable!() };

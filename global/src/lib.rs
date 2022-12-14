@@ -25,7 +25,7 @@ pub fn lines_to_array(lines: Vec<String>) -> Vec<Vec<u32>> {
 
 pub fn extract_number_from_string<T: FromStr>(s: &String) -> T {
   let re = Regex::new(r"(\d+)").unwrap();
-  let c = re.captures_iter(&s).next().unwrap();
+  let c = re.captures_iter(s).next().unwrap();
   match c[1].to_string().parse::<T>() {
     Ok(v) => v,
     Err(_) => panic!("Failed to parse number from {}", s)

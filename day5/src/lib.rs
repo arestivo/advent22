@@ -21,7 +21,7 @@ pub struct Move {
 }
 
 impl Ship {
-  pub fn build(lines: &Vec<String>) -> Ship {
+  pub fn build(lines: &[String]) -> Ship {
     let mut ship = Ship { stacks: vec![] };
 
     for _ in (1..=lines[0].len() + 1).step_by(4) {
@@ -29,7 +29,7 @@ impl Ship {
     }
 
     for line in lines.iter() {
-      if !line.contains("[") { break };
+      if !line.contains('[') { break };
       for c in (1..=line.len()).step_by(4) {
         let letter = line.chars().nth(c).unwrap();
         if letter != ' ' {
@@ -66,7 +66,7 @@ pub trait MultipleMover {
 }
 
 impl Move {
-  pub fn read(lines: &Vec<String>) -> Vec<Move> {
+  pub fn read(lines: &[String]) -> Vec<Move> {
     let mut moves: Vec<Move> = vec![];
     let re = Regex::new(r"move (\d+) from (\d+) to (\d+)").unwrap();
 
@@ -86,8 +86,7 @@ impl Move {
 
 impl fmt::Display for Ship {
   fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-    let v: Vec<&char> = self.stacks.iter().map(|s| s.back().unwrap()).collect();
-    let s: String = v.into_iter().collect();
+    let s: String = self.stacks.iter().map(|s| s.back().unwrap()).collect();
     write!(f, "{}", s)
   }
 }
