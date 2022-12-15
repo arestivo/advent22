@@ -28,7 +28,6 @@ pub fn get_sensor_and_beacon(line: &str) -> (Position, Position) {
   )
 }
 
-
 pub fn starts_and_ends(segments: &[Segment]) -> (Vec<i64>, Vec<i64>) {
   let mut starts = segments.iter().map(|s| s.start).collect::<Vec<i64>>();
   starts.sort();
