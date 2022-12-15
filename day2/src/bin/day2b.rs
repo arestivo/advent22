@@ -10,8 +10,8 @@ fn value_calculator(game: &str) -> i32 {
   let (h1, h2) = day2::normalize(game);
 
   match h2 {
-    GameHand::ROCK => 0 + h1.worse().value(),
-    GameHand::PAPER => 3 + h1.value(),
+    GameHand::ROCK    =>     h1.worse().value(),
+    GameHand::PAPER   => 3 + h1.value(),
     GameHand::SCISSOR => 6 + h1.better().value(),
   }
 }

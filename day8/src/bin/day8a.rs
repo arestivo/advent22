@@ -13,11 +13,11 @@ fn visibility(trees: &Vec<Vec<u32>>) -> Vec<Vec<u32>> {
 
   let mut visible = vec![vec![0; trees[0].len()]; trees.len()];
 
-  for r in 0..height {
+  (0..height).for_each(|r| {
     for c in 0..width {
-      visible[r][c] = is_visible(&trees, r, c);
+      visible[r][c] = is_visible(trees, r, c);
     }
-  }
+  });
 
   visible
 }

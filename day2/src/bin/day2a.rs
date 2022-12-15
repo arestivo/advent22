@@ -10,9 +10,9 @@ fn value_calculator(game: &str) -> i32 {
   let (h1, h2) = day2::normalize(game);
 
   match day2::result(&h1, &h2) {
-    GameResult::LOSE => 0 + h2.value(),
+    GameResult::LOSE =>     h2.value(),
     GameResult::DRAW => 3 + h2.value(),
-    GameResult::WIN => 6 + h2.value(),
+    GameResult::WIN  => 6 + h2.value(),
   }
 }
 

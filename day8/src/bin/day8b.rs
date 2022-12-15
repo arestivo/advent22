@@ -48,11 +48,11 @@ mod tests {
 
     let mut scores = vec![vec![0; trees[0].len()]; trees.len()];
 
-    for r in 0..trees.len() {
+    (0..trees.len()).for_each(|r| {
       for c in 0..trees[0].len() {
         scores[r][c] = scenic_score(&trees, r, c);
       }
-    }
+    });
 
     assert_eq!(scores, vec![vec![0, 0, 0, 0, 0], vec![0, 1, 4, 1, 0], vec![0, 6, 1, 2, 0], vec![0, 1, 8, 3, 0], vec![0, 0, 0, 0, 0]]);
   }
