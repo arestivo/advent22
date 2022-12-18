@@ -32,6 +32,7 @@ fn dfs(valves: &HashMap<String, Valve>, mem: &mut HashMap<String, u32>, current:
       let mut opened = opened.clone();
       opened.push(valve.label.clone());
       opened.sort();
+
       best = releasing + dfs(valves, mem, current, opened.clone(), remaining - 1, releasing + valve.rate);
     }
 

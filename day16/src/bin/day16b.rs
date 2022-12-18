@@ -10,7 +10,7 @@ fn main() {
   let best = dfs(&valves, &mut mem, "AA", vec![], 26, 0);
   let best = best.0 + dfs(&valves, &mut mem, "AA", best.1, 26, 0).0;
 
-  println!("{:?}", best);
+  println!("{} {:?}", best, mem.len());
 }
 
 fn hash(current: &str, opened: Vec<String>, remaining: u32) -> String {
@@ -33,6 +33,7 @@ fn dfs(valves: &HashMap<String, Valve>, mem: &mut HashMap<String, (u32, Vec<Stri
       let mut opened = opened.clone();
       opened.push(valve.label.clone());
       opened.sort();
+
       let dfs = dfs(valves, mem, current, opened.clone(), remaining - 1, releasing + valve.rate);
       best = (dfs.0 + releasing, dfs.1);
     }
@@ -40,7 +41,7 @@ fn dfs(valves: &HashMap<String, Valve>, mem: &mut HashMap<String, (u32, Vec<Stri
     for next in valve.tunnels.clone() {
       let dfs = dfs(valves, mem, &next, opened.clone(), remaining - 1, releasing);
       if releasing + dfs.0 > best.0 { best = (releasing + dfs.0, dfs.1) }
-    }  
+    }
   }
 
   mem.insert(h, best.clone());
