@@ -47,7 +47,7 @@ pub fn dps(mem: &mut HashMap<String, u64>, bp: &Blueprint, stock: &Stock, robots
 
   if time == 0 { return geodes }
 
-  if let Some(v) = mem.get(&hash) { return *v; }
+  if let Some(v) = mem.get(&hash) { return geodes + *v; }
   
   let mut best = 0;
   let next_stock = stock.produce(robots);
@@ -63,14 +63,14 @@ pub fn dps(mem: &mut HashMap<String, u64>, bp: &Blueprint, stock: &Stock, robots
       best = max(best, dps(mem, bp, &next_stock.use_ore(bp.clay), &robots.make_clay(), stop_at, time - 1, geodes)); 
     } 
     
-    if robots.ore < stop_at.ore &&stock.ore >= bp.ore { 
+    if robots.ore < stop_at.ore && stock.ore >= bp.ore { 
       best = max(best, dps(mem, bp, &next_stock.use_ore(bp.ore), &robots.make_ore(), stop_at, time - 1, geodes)); 
     } 
   
     best = max(best, dps(mem, bp, &next_stock, robots, stop_at, time - 1, geodes));  
   }
 
-  mem.insert(hash, best);
+  mem.insert(hash, best - geodes);
 
   best
 }
