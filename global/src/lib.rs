@@ -32,6 +32,16 @@ pub fn extract_number_from_string<T: FromStr>(s: &String) -> T {
   }
 }
 
+pub fn extract_numbers_from_string(s: &str) -> Vec<u64> {
+  let mut numbers: Vec<u64> = vec![];
+  let re = Regex::new(r"\d+").unwrap();
+  let cap = re.captures_iter(s);
+
+  for c in cap { numbers.push(c[0].parse::<u64>().unwrap()); }
+
+  numbers
+}
+
 pub fn to_u32(s: &str) -> u32 {
   s.parse::<u32>().unwrap()
 }
