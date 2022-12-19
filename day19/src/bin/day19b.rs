@@ -22,7 +22,7 @@ fn main() {
       &Stock::new(0, 0, 0), 
       &Stock::new(1, 0, 0), 
       &stop_at,
-      32);
+      32, 0);
     mul *= geodes;
   }
 

@@ -42,10 +42,10 @@ pub fn lines_to_blueprints(lines: &[String]) -> Vec<Blueprint> {
   blueprints
 }
 
-pub fn dps(mem: &mut HashMap<String, u64>, bp: &Blueprint, stock: &Stock, robots: &Stock, stop_at: &Stock, time: u64) -> u64 {
+pub fn dps(mem: &mut HashMap<String, u64>, bp: &Blueprint, stock: &Stock, robots: &Stock, stop_at: &Stock, time: u64, geodes: u64) -> u64 {
   let hash = hash(stock, robots, time);
 
-  if time == 0 { return 0 }
+  if time == 0 { return geodes }
 
   if let Some(v) = mem.get(&hash) { return *v; }
   
@@ -53,21 +53,21 @@ pub fn dps(mem: &mut HashMap<String, u64>, bp: &Blueprint, stock: &Stock, robots
   let next_stock = stock.produce(robots);
 
   if stock.ore >= bp.geode.0 && stock.obsidian >= bp.geode.1 { 
-    best = time - 1 + max(best, dps(mem, bp, &next_stock.use_ore(bp.geode.0).use_obsidian(bp.geode.1), robots, stop_at, time - 1)); 
+    best = max(best, dps(mem, bp, &next_stock.use_ore(bp.geode.0).use_obsidian(bp.geode.1), robots, stop_at, time - 1, geodes + time - 1)); 
   } else {
     if robots.obsidian < stop_at.obsidian && stock.ore >= bp.obsidian.0 && stock.clay >= bp.obsidian.1 { 
-      best = max(best, dps(mem, bp, &next_stock.use_ore(bp.obsidian.0).use_clay(bp.obsidian.1), &robots.make_obsidian(), stop_at, time - 1)); 
+      best = max(best, dps(mem, bp, &next_stock.use_ore(bp.obsidian.0).use_clay(bp.obsidian.1), &robots.make_obsidian(), stop_at, time - 1, geodes)); 
     } 
     
     if robots.clay < stop_at.clay && stock.ore >= bp.clay { 
-      best = max(best, dps(mem, bp, &next_stock.use_ore(bp.clay), &robots.make_clay(), stop_at, time - 1)); 
+      best = max(best, dps(mem, bp, &next_stock.use_ore(bp.clay), &robots.make_clay(), stop_at, time - 1, geodes)); 
     } 
     
     if robots.ore < stop_at.ore &&stock.ore >= bp.ore { 
-      best = max(best, dps(mem, bp, &next_stock.use_ore(bp.ore), &robots.make_ore(), stop_at, time - 1)); 
+      best = max(best, dps(mem, bp, &next_stock.use_ore(bp.ore), &robots.make_ore(), stop_at, time - 1, geodes)); 
     } 
   
-    best = max(best, dps(mem, bp, &next_stock, robots, stop_at, time - 1));  
+    best = max(best, dps(mem, bp, &next_stock, robots, stop_at, time - 1, geodes));  
   }
 
   mem.insert(hash, best);
