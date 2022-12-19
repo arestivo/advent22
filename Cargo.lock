@@ -102,6 +102,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "day18"
+version = "0.1.0"
+dependencies = [
+ "global",
+ "num",
+ "priority-queue",
+ "regex",
+]
+
+[[package]]
 name = "day2"
 version = "0.1.0"
 dependencies = [
