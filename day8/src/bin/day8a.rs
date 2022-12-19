@@ -1,6 +1,6 @@
 fn main() {
   let lines = global::read_strings();
-  let trees = global::lines_to_array(lines);
+  let trees = global::lines_to_array(&lines);
 
   let visible = visibility(&trees);
 
@@ -40,7 +40,7 @@ mod tests {
   #[test]
   fn is_visible_works() {
     let lines = vec!["30373".to_string(), "25512".to_string(), "65332".to_string(), "33549".to_string(), "35390".to_string()];
-    let trees = global::lines_to_array(lines);
+    let trees = global::lines_to_array(&lines);
     let visible = visibility(&trees);
 
 

@@ -9,7 +9,7 @@ pub fn read_single_line() -> String {
   io::stdin().lock().lines().next().unwrap().unwrap()
 }
 
-pub fn lines_to_array(lines: Vec<String>) -> Vec<Vec<u32>> {
+pub fn lines_to_array(lines: &Vec<String>) -> Vec<Vec<u32>> {
   let mut trees = vec![];
 
   for line in lines {
