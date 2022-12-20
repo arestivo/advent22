@@ -44,8 +44,7 @@ fn should_build(orb: usize, stop_at: Robots, robots: Robots) -> bool {
 }
 
 fn can_build(instructions: Instructions, stock: Stock) -> bool {
-  instructions.iter()
-    .zip(&stock).all(|(i, s)| s >= i)
+  instructions.iter().zip(&stock).all(|(i, s)| s >= i)
 }
 
 fn time_to_build(instructions: Instructions, stock: Stock, robots: Robots) -> u64 {
