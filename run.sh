@@ -8,5 +8,5 @@ while getopts 'd:p:s' opt; do
  esac
 done
 
-export RUST_BACKTRACE=1
+#export RUST_BACKTRACE=1
 cargo run --bin day$day$part < inputs/$folder/$day.in

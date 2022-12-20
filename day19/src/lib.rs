@@ -1,80 +1,102 @@
 use std::{cmp::max, collections::HashMap};
 
-#[derive(Debug)]
-pub struct Blueprint {
-  pub ore: u64,
-  pub clay: u64,
-  pub obsidian: (u64, u64),
-  pub geode: (u64, u64),
-}
+type Stock = [u64; 3];
+type Robots = [u64; 3];
+type Instructions = [u64; 3];
+type BluePrint = [Stock; 4];
 
-#[derive(Debug)]
-pub struct Stock {
-  pub ore: u64,
-  pub clay: u64,
-  pub obsidian: u64
-}
-
-impl Stock {
-  pub fn new(ore: u64, clay: u64, obsidian: u64) -> Self { Stock { ore, clay, obsidian } }
-
-  pub fn use_ore(&self, q: u64) -> Stock { Stock { ore: self.ore - q, clay: self.clay, obsidian: self.obsidian}}
-  pub fn use_clay(&self, q: u64) -> Stock { Stock { ore: self.ore, clay: self.clay - q, obsidian: self.obsidian}}
-  pub fn use_obsidian(&self, q: u64) -> Stock { Stock { ore: self.ore, clay: self.clay, obsidian: self.obsidian - q}}
-
-  pub fn make_ore(&self) -> Stock { Stock { ore: self.ore + 1, clay: self.clay, obsidian: self.obsidian}}
-  pub fn make_clay(&self) -> Stock { Stock { ore: self.ore, clay: self.clay + 1, obsidian: self.obsidian}}
-  pub fn make_obsidian(&self) -> Stock { Stock { ore: self.ore, clay: self.clay, obsidian: self.obsidian + 1}}
-
-  pub fn produce(&self, robots: &Stock) -> Stock { Stock { ore: self.ore + robots.ore, clay: self.clay + robots.clay, obsidian: self.obsidian + robots.obsidian}}
-
-  pub fn hash(&self) -> String { format!("{},{},{}", self.ore, self.clay, self.obsidian )}
-}
-
-pub fn lines_to_blueprints(lines: &[String]) -> Vec<Blueprint> {
+pub fn lines_to_blueprints(lines: &[String]) -> Vec<BluePrint> {
   let mut blueprints = vec![];
 
   for line in lines {
     let values = global::extract_numbers_from_string(line);
-    blueprints.push( Blueprint {ore: values[1], clay: values[2], obsidian: (values[3], values[4]), geode: (values[5], values[6])});
+    blueprints.push([
+        [values[1], 0, 0], 
+        [values[2], 0, 0], 
+        [values[3], values[4], 0], 
+        [values[5], 0, values[6]] 
+    ]);
   }
 
   blueprints
 }
 
-pub fn dps(mem: &mut HashMap<String, u64>, bp: &Blueprint, stock: &Stock, robots: &Stock, stop_at: &Stock, time: u64, geodes: u64) -> u64 {
+fn produce(stock: Stock, robots: Robots, time: u64) -> Stock {
+  let mut next = stock;
+  for i in 0..3 { next[i] += robots[i] * time; }
+  next
+}
+
+fn consume(stock: Stock, instructions: Instructions) -> Stock {
+  let mut next = stock;
+  for i in 0..3 { next[i] -= instructions[i]; }
+  next
+}
+
+fn build(robots: Robots, orb: usize) -> Stock {
+  let mut next = robots;
+  next[orb] += 1;
+  next
+}
+
+fn should_build(orb: usize, stop_at: Robots, robots: Robots) -> bool {
+  let i = orb as usize;
+  stop_at[i] > robots[i]
+}
+
+fn can_build(instructions: Instructions, stock: Stock) -> bool {
+  instructions.iter()
+    .zip(&stock).all(|(i, s)| s >= i)
+}
+
+fn time_to_build(instructions: Instructions, stock: Stock, robots: Robots) -> u64 {
+  instructions.iter()
+    .zip(&stock).map(|(i, s)| if s >= i {0} else {i - s})
+    .zip(&robots).map(|(n, r)| if n > 0 && *r == 0 { u64::MAX } else {(n as f64 / *r as f64).ceil() as u64})
+    .max().unwrap()
+}
+
+fn potential(time: u64) -> u64 {
+  time * (time - 1) / 2
+}
+
+pub struct DfsEnv { pub best: u64, pub bp: BluePrint, pub mem: HashMap<String, u64> }
+
+pub fn dps(stock: Stock, robots: Robots, stop_at: Robots, time: u64, geodes: u64, env: &mut DfsEnv) -> u64 {
   let hash = hash(stock, robots, time);
 
   if time == 0 { return geodes }
-
-  if let Some(v) = mem.get(&hash) { return geodes + *v; }
+  if let Some(v) = env.mem.get(&hash) { return *v; }
+  if geodes + potential(time) <= env.best { return 0 }
   
   let mut best = 0;
-  let next_stock = stock.produce(robots);
 
-  if stock.ore >= bp.geode.0 && stock.obsidian >= bp.geode.1 { 
-    best = max(best, dps(mem, bp, &next_stock.use_ore(bp.geode.0).use_obsidian(bp.geode.1), robots, stop_at, time - 1, geodes + time - 1)); 
+  if can_build(env.bp[3], stock) {
+    let mut next_stock = produce(stock, robots, 1);
+    next_stock = consume(next_stock, env.bp[3]);
+    best = max(best, dps(next_stock, robots, stop_at, time - 1, geodes + time - 1, env)); 
   } else {
-    if robots.obsidian < stop_at.obsidian && stock.ore >= bp.obsidian.0 && stock.clay >= bp.obsidian.1 { 
-      best = max(best, dps(mem, bp, &next_stock.use_ore(bp.obsidian.0).use_clay(bp.obsidian.1), &robots.make_obsidian(), stop_at, time - 1, geodes)); 
-    } 
-    
-    if robots.clay < stop_at.clay && stock.ore >= bp.clay { 
-      best = max(best, dps(mem, bp, &next_stock.use_ore(bp.clay), &robots.make_clay(), stop_at, time - 1, geodes)); 
-    } 
-    
-    if robots.ore < stop_at.ore && stock.ore >= bp.ore { 
-      best = max(best, dps(mem, bp, &next_stock.use_ore(bp.ore), &robots.make_ore(), stop_at, time - 1, geodes)); 
-    } 
-  
-    best = max(best, dps(mem, bp, &next_stock, robots, stop_at, time - 1, geodes));  
+    for orb in 0..3 {
+      if should_build(orb, stop_at, robots) { 
+        let ttb = time_to_build(env.bp[orb], stock, robots);
+        if ttb < time {
+          let stock_after_producing = produce(stock, robots, ttb + 1);
+          let stock_after_consuming = consume(stock_after_producing, env.bp[orb]);
+          let next_robots = build(robots, orb);
+          best = max(best, dps(stock_after_consuming, next_robots, stop_at, time - ttb - 1, geodes, env));     
+        }
+      } 
+    }
+      
+    let next_stock = produce(stock, robots, 1);
+    best = max(best, dps(next_stock, robots, stop_at, time - 1, geodes, env));  
   }
 
-  mem.insert(hash, best - geodes);
-
+  env.best = max(env.best, best);
+  env.mem.insert(hash, best);
   best
 }
 
-fn hash (stock: &Stock, robots: &Stock, time: u64) -> String {
-  format!("{}:{}:{}", stock.hash(), robots.hash(), time)
+fn hash (stock: Stock, robots: Stock, time: u64) -> String {
+  format!("{:?}:{:?}:{}", stock, robots, time)
 }
