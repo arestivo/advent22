@@ -40,8 +40,7 @@ fn build(robots: Robots, orb: usize) -> Stock {
 }
 
 fn should_build(orb: usize, stop_at: Robots, robots: Robots) -> bool {
-  let i = orb as usize;
-  stop_at[i] > robots[i]
+  stop_at[orb] > robots[orb]
 }
 
 fn can_build(instructions: Instructions, stock: Stock) -> bool {
