@@ -29,13 +29,10 @@ pub struct Monkey {
 }
 
 pub fn lines_to_monkeys(lines: &[String]) -> HashMap<String, Monkey> {
-  let monkeys = 
-    lines
-      .iter()
-      .map(|s| s.parse::<Monkey>())
-      .map(Result::unwrap)
-      .map(|m: Monkey| (m.clone().word, m))
-      .collect::<HashMap<_, _>>();
-
-  monkeys
+  lines
+    .iter()
+    .map(|s| s.parse::<Monkey>())
+    .map(Result::unwrap)
+    .map(|m: Monkey| (m.clone().word, m))
+    .collect::<HashMap<_, _>>()
 }
