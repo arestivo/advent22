@@ -1,4 +1,4 @@
-use std::{collections::HashMap};
+use std::collections::HashMap;
 
 use day19::{lines_to_blueprints, DfsEnv};
 
@@ -10,18 +10,17 @@ fn main() {
   let mut id = 1;
 
   for bp in bps {
-    let mut env = DfsEnv { best: 0, bp, mem: HashMap::new() };
-
     let stop_at = [ 
       (0..=3).map(|o| bp[o][0]).max().unwrap(),
       (0..=3).map(|o| bp[o][1]).max().unwrap(),
       (0..=3).map(|o| bp[o][2]).max().unwrap()
     ];
 
+    let mut env = DfsEnv { best: 0, bp, mem: HashMap::new(), stop_at };
+
     let geodes = day19::dps(
       [0, 0, 0], 
       [1, 0, 0], 
-      stop_at,
       24, 0, &mut env);
     sum += id * geodes;
     id += 1;

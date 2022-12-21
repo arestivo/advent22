@@ -58,10 +58,10 @@ fn potential(time: u64) -> u64 {
   time * (time - 1) / 2
 }
 
-pub struct DfsEnv { pub best: u64, pub bp: BluePrint, pub mem: HashMap<String, u64> }
+pub struct DfsEnv { pub best: u64, pub bp: BluePrint, pub mem: HashMap<(Stock, Robots, u64), u64>, pub stop_at: Robots }
 
-pub fn dps(stock: Stock, robots: Robots, stop_at: Robots, time: u64, geodes: u64, env: &mut DfsEnv) -> u64 {
-  let hash = hash(stock, robots, time);
+pub fn dps(stock: Stock, robots: Robots, time: u64, geodes: u64, env: &mut DfsEnv) -> u64 {
+  let hash = (stock, robots, time);
 
   if time == 0 { return geodes }
   if let Some(v) = env.mem.get(&hash) { return *v; }
@@ -72,29 +72,25 @@ pub fn dps(stock: Stock, robots: Robots, stop_at: Robots, time: u64, geodes: u64
   if can_build(env.bp[3], stock) {
     let mut next_stock = produce(stock, robots, 1);
     next_stock = consume(next_stock, env.bp[3]);
-    best = max(best, dps(next_stock, robots, stop_at, time - 1, geodes + time - 1, env)); 
+    best = max(best, dps(next_stock, robots, time - 1, geodes + time - 1, env)); 
   } else {
     for orb in 0..3 {
-      if should_build(orb, stop_at, robots) { 
+      if should_build(orb, env.stop_at, robots) { 
         let ttb = time_to_build(env.bp[orb], stock, robots);
         if ttb < time {
           let stock_after_producing = produce(stock, robots, ttb + 1);
           let stock_after_consuming = consume(stock_after_producing, env.bp[orb]);
           let next_robots = build(robots, orb);
-          best = max(best, dps(stock_after_consuming, next_robots, stop_at, time - ttb - 1, geodes, env));     
+          best = max(best, dps(stock_after_consuming, next_robots, time - ttb - 1, geodes, env));     
         }
       } 
     }
       
     let next_stock = produce(stock, robots, 1);
-    best = max(best, dps(next_stock, robots, stop_at, time - 1, geodes, env));  
+    best = max(best, dps(next_stock, robots, time - 1, geodes, env));  
   }
 
   env.best = max(env.best, best);
   env.mem.insert(hash, best);
   best
-}
-
-fn hash (stock: Stock, robots: Stock, time: u64) -> String {
-  format!("{:?}:{:?}:{}", stock, robots, time)
 }
