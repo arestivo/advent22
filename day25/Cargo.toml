@@ -12,6 +12,3 @@ parse-display = "0.8.0"
 
 [[bin]]
 name = "day25a"
-
-[[bin]]
-name = "day25b"

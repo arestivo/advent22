@@ -25,22 +25,22 @@ fn from_snafu(snafu: String) -> i64 {
   res
 }
 
-fn largest_snafu(partial_snafu: &String) -> i64 {
-  let snafu = partial_snafu.replace("?", "2");
+fn largest_snafu(partial_snafu: &str) -> i64 {
+  let snafu = partial_snafu.replace('?', "2");
   from_snafu(snafu)
 }
 
-fn lowest_snafu(partial_snafu: &String) -> i64 {
-  let snafu = partial_snafu.replace("?", "=");
+fn lowest_snafu(partial_snafu: &str) -> i64 {
+  let snafu = partial_snafu.replace('?', "=");
   from_snafu(snafu)
 }
 
-fn average_snafu(partial_snafu: &String) -> i64 {
-  let snafu = partial_snafu.replace("?", "0");
+fn average_snafu(partial_snafu: &str) -> i64 {
+  let snafu = partial_snafu.replace('?', "0");
   from_snafu(snafu)
 }
 
-fn snafu_neighbours(partial_snafu: &String) -> Vec<String> {
+fn snafu_neighbours(partial_snafu: &str) -> Vec<String> {
   ['0', '1', '2', '-', '='].map(|d| partial_snafu.replacen('?', &d.to_string(), 1)).to_vec()
 }
 
